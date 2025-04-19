@@ -7,12 +7,17 @@
       <button>Ajouter</button>
     </form>
     <p v-if="!nbTaches >= 1">Aucune tâche</p>
-    <input type="checkbox" v-model="hideTaches" />  
+    <input type="checkbox" v-model="hideTaches" />
     <label v-show="hideTaches">
-      <p>f</p>
       <ul>
-        <li v-for="tache in taches">
-          <input type="checkbox" />{{ tache.description }}
+        <li
+          v-for="tache in taches"
+          :style="{ textDecoration: tache.completed ? 'line-through' : 'none' }"
+          :key="tache.description"
+        >
+          <input type="checkbox" v-model="tache.completed" @submit.revent="sortTaches" />{{
+            tache
+          }}
         </li>
       </ul>
     </label>
@@ -36,10 +41,21 @@ const add = (event) => {
   nbTaches.value++;
   tache.value.description = textTache.value;
   taches.value.push(tache.value);
+  taches.value.sort((a, b) => {
+    return (!a.completed) - b.completed;
+  });
+  tache.value = {
+    description: "",
+    completed: false,
+    date: new Date(),
+  };
+  textTache.value = "";
 };
-// const sortTaches = () => {
-//   taches.value.sort()
-// }
+const sortTaches = () => {
+  taches.value.sort((a, b) => {
+    return (!a.completed) - b.completed;
+  });
+}
 </script>
 
 <style>
